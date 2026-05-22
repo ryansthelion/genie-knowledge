@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@databricks/design-system": "1.12.22",
+    "@databricks/design-system": "1.12.21",
     "@emotion/react": "^11.11.3",
     "moment": "^2.30.1",
     "react": "^18.2.0",
