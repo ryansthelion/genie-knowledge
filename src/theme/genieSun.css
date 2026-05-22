@@ -1,0 +1,52 @@
+/**
+ * Genie ☀️ light variables — snapshot from Figma `get_variable_defs` on Knowledge Snippets
+ * (node 8679:6307, file st5IOjhahvmvXyDbjvMpHB). Du Bois library semantics; Genie text styles
+ * live under Du Bois / Genie/* in the linked Figma library.
+ *
+ * Reference in code: var(--genie-color-text-primary), etc.
+ */
+[data-theme='genie-sun'] {
+  /* Text */
+  --genie-color-text-primary: #161616;
+  --genie-color-text-secondary: #6f6f6f;
+  --genie-color-action-tertiary-text-default: #6f6f6f;
+
+  /* Surfaces */
+  --genie-color-background-primary: #ffffff;
+  --genie-color-background-secondary: #f9f7f4;
+  --genie-color-primary-ai-background-default: #f6e9ff;
+
+  /* Borders & separators */
+  --genie-color-border: #ebebeb;
+  --genie-color-action-default-border-default: #ebebeb;
+
+  /* Action fills (rgba hex from Figma) */
+  --genie-color-action-default-background-default: #00000000;
+  --genie-color-action-default-background-hover: #0000000d;
+  --genie-color-black-alpha-05: #0000000d;
+
+  /* Spacing (px) */
+  --genie-spacing-0: 0px;
+  --genie-spacing-xs: 4px;
+  --genie-spacing-sm: 8px;
+  --genie-spacing-mid: 12px;
+  --genie-spacing-md: 16px;
+  --genie-spacing-lg: 24px;
+
+  /* Radii */
+  --genie-radius-sm: 4px;
+  --genie-radius-md: 8px;
+  /** Figma `border-radius-lg` — Panel `8679:6155`. */
+  --genie-radius-lg: 12px;
+  --genie-radius-full: 999px;
+  --genie-radius-action: 999px;
+
+  /* Elevation / Light / shadow-md */
+  --genie-shadow-md: 0px 3px 6px 0px var(--genie-color-black-alpha-05);
+
+  /**
+   * Figma **DuBois Patterns: Gen AI** fill style `ai-gradient-100` (library: 📖 DuBois Patterns: Gen AI).
+   * Stops align with Du Bois `theme.colors.branded.ai` in `@databricks/design-system`.
+   */
+  --genie-fill-ai-gradient-100: linear-gradient(135deg, #4299e0 20.5%, #ca42e0 46.91%, #ff5f46 79.5%);
+}
