@@ -19,6 +19,10 @@ import {
 const EXPERTS_PER_PAGE = 7;
 const ASSETS_PER_PAGE = 4;
 
+function pageCountFor(total: number, perPage: number) {
+  return Math.max(1, Math.ceil(total / perPage));
+}
+
 /** Figma Domain Panel `10342:11108` — Genie Graph topic drill-down. */
 export type DomainPanelProps = {
   config: DomainPanelConfig;
@@ -52,7 +56,13 @@ export function DomainPanel({ config, onClose, onBack, onExpertSelect }: DomainP
     return config.assets.slice(start, start + ASSETS_PER_PAGE);
   }, [config.assets, currentPage]);
 
-  const showPagination = activeTabId === 'experts' || activeTabId === 'assets';
+  const paginationPageCount = useMemo(() => {
+    if (activeTabId === 'experts') return pageCountFor(expertsByRating.length, EXPERTS_PER_PAGE);
+    if (activeTabId === 'assets') return pageCountFor(config.assets.length, ASSETS_PER_PAGE);
+    return 1;
+  }, [activeTabId, expertsByRating.length, config.assets.length]);
+
+  const showPagination = paginationPageCount > 1;
 
   return (
     <aside css={panelRoot()} data-name="DomainPanel" aria-label={config.panelAriaLabel}>
@@ -125,7 +135,7 @@ export function DomainPanel({ config, onClose, onBack, onExpertSelect }: DomainP
 
           {showPagination ? (
             <DomainPanelPagination
-              pageCount={config.paginationPageCount}
+              pageCount={paginationPageCount}
               currentPage={currentPage}
               onPageChange={setCurrentPage}
             />

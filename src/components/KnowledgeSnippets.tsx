@@ -346,7 +346,11 @@ function Inner() {
       {prototypeVersionId === 'v2' ? (
         <div css={bodyRow()} data-name="Body">
           <div css={mainColumn()} data-name="Main column">
-            <KnowledgeSnippetsV2 key={prototypeVersionId} onViewFullSnippet={openSnippetPanel} />
+            <KnowledgeSnippetsV2
+              key={prototypeVersionId}
+              onViewFullSnippet={openSnippetPanel}
+              onDomainSelect={openDomainPanel}
+            />
           </div>
           <div css={snippetPanelShell(snippetPanelOpen)} aria-hidden={!snippetPanelOpen}>
             {snippetPanelOpen ? (

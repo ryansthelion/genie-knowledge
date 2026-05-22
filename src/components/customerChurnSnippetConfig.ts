@@ -291,6 +291,34 @@ export const CUSTOMER_CHURN_SNIPPET_DROPDOWN_ITEMS: SnippetDropdownItem[] = CUST
   ({ id, label }) => ({ id, label }),
 );
 
+/** Figma Topics dropdown `10677:9748` — twelve workspace topics for the "12 topics" pill. */
+export const CUSTOMER_CHURN_TOPICS_DROPDOWN_ITEMS: SnippetDropdownItem[] = [
+  { id: 'merchandising', label: 'Merchandising', domainId: 'merchandising' },
+  { id: 'customers', label: 'customers' },
+  { id: 'stores', label: 'stores' },
+  { id: 'billing', label: 'billing' },
+  { id: 'customer-churn', label: 'Customer churn' },
+  { id: 'retention', label: 'Retention' },
+  { id: 'subscriptions', label: 'Subscriptions' },
+  { id: 'revenue-metrics', label: 'Revenue metrics' },
+  { id: 'saas-kpis', label: 'SaaS KPIs' },
+  { id: 'customer-success', label: 'Customer success' },
+  { id: 'product-analytics', label: 'Product analytics' },
+  { id: 'billing-operations', label: 'Billing operations' },
+];
+
+/** Figma Experts dropdown `10677:9804` — eight experts for the "8 experts" pill. */
+export const CUSTOMER_CHURN_EXPERTS_DROPDOWN_ITEMS: SnippetDropdownItem[] = [
+  { id: 'alex-smith', label: 'Alex Smith', expertInitial: 'A', expertAvatarBg: '#1e3a8a' },
+  { id: 'cooper-flagg', label: 'Cooper Flagg', expertInitial: 'C', expertAvatarBg: '#04867d' },
+  { id: 'kyrie-irving', label: 'Kyrie Irving', expertInitial: 'K', expertAvatarBg: '#c2185b' },
+  { id: 'luka-doncic', label: 'Luka Doncic', expertInitial: 'L', expertAvatarBg: '#a6630c' },
+  { id: 'liam', label: 'Liam Chen', expertInitial: 'L', expertAvatarBg: '#5c6bc0', userId: 'liam' },
+  { id: 'oliver', label: 'Oliver Smith', expertInitial: 'O', expertAvatarBg: '#00897b', userId: 'oliver' },
+  { id: 'emma', label: 'Emma Johnson', expertInitial: 'E', expertAvatarBg: '#8e24aa', userId: 'emma' },
+  { id: 'ava', label: 'Ava Martinez', expertInitial: 'A', expertAvatarBg: '#ef6c00', userId: 'ava' },
+];
+
 function toToolCallCategoryLabel(tagLabel: string): string {
   if (tagLabel === 'Metric definition') return 'Metric definition';
   if (tagLabel === 'Business definition') return 'Business term';

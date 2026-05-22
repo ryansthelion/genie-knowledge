@@ -6,15 +6,24 @@ import {
   useAnchorSnippetPopover,
 } from './knowledgeSnippetPopoverLayer';
 import { genieSunRootAttributes, genieVar } from '../theme/genieSun';
-import { getSnippetPopoverForDropdownItem, type SnippetDropdownItem } from './snippetDropdownConfig';
+import {
+  expertInitialFromName,
+  getSnippetPopoverForDropdownItem,
+  type SnippetDropdownItem,
+} from './snippetDropdownConfig';
 
 const MENU_ICON_PX = 16;
 const MENU_ITEM_HOVER_DELAY_MS = 300;
 /** Figma list item — 4px + 20px line + 4px vertical padding. */
 export const SNIPPET_DROPDOWN_ITEM_ROW_HEIGHT_PX = 28;
 
+/** Figma Experts row `10677:9805` — 20px avatar + 20px label. */
+export const EXPERT_DROPDOWN_ITEM_ROW_HEIGHT_PX = 32;
+
+const EXPERT_AVATAR_PX = 20;
+
 /** Figma list item — 8px radius, icon + label; hover uses action default hover. */
-const itemStyles = css({
+const snippetItemStyles = css({
   display: 'flex',
   alignItems: 'center',
   gap: 8,
@@ -30,12 +39,65 @@ const itemStyles = css({
   },
 });
 
+/** Figma Experts dropdown `10677:9804` — xs avatar + name. */
+const expertItemStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  padding: '4px 12px 4px 8px',
+  borderRadius: 8,
+  fontSize: 13,
+  lineHeight: '20px',
+  color: genieVar.textPrimary,
+  cursor: 'pointer',
+  outline: 'none',
+  '&:hover, &:focus, &[data-highlighted]': {
+    backgroundColor: genieVar.actionDefaultBgHover,
+  },
+});
+
+function expertMenuAvatar(initial: string, bg: string) {
+  return css({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: EXPERT_AVATAR_PX,
+    height: EXPERT_AVATAR_PX,
+    borderRadius: '50%',
+    backgroundColor: bg,
+    flexShrink: 0,
+    fontSize: 11,
+    fontWeight: 600,
+    lineHeight: 1,
+    color: '#fff',
+  });
+}
+
+/** Figma Topics dropdown `10677:9748` — text-only row, no leading icon. */
+const textItemStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  padding: '4px 12px 4px 8px',
+  borderRadius: 8,
+  fontSize: 13,
+  lineHeight: '20px',
+  color: genieVar.textPrimary,
+  cursor: 'pointer',
+  outline: 'none',
+  wordBreak: 'break-word',
+  '&:hover, &:focus, &[data-highlighted]': {
+    backgroundColor: genieVar.actionDefaultBgHover,
+  },
+});
+
 function DropdownSnippetMenuItem({
   item,
+  itemLayout,
   onSelect,
   onViewFullSnippet,
 }: {
   item: SnippetDropdownItem;
+  itemLayout: 'snippet' | 'text' | 'expert';
   onSelect?: () => void;
   onViewFullSnippet?: () => void;
 }) {
@@ -56,6 +118,7 @@ function DropdownSnippetMenuItem({
     config: popover,
     hoverDelayMs: MENU_ITEM_HOVER_DELAY_MS,
     placement: 'right',
+    isEnabled: itemLayout === 'snippet' && Boolean(popover),
   });
 
   const handleViewFullSnippet = useCallback(() => {
@@ -63,11 +126,32 @@ function DropdownSnippetMenuItem({
     onViewFullSnippet?.();
   }, [dismissPopover, onViewFullSnippet]);
 
+  if (itemLayout === 'text') {
+    return (
+      <DropdownMenu.Item ref={itemRef} css={textItemStyles} onSelect={onSelect}>
+        {item.label}
+      </DropdownMenu.Item>
+    );
+  }
+
+  if (itemLayout === 'expert') {
+    const initial = item.expertInitial ?? expertInitialFromName(item.label);
+    const avatarBg = item.expertAvatarBg ?? '#5c6bc0';
+    return (
+      <DropdownMenu.Item ref={itemRef} css={expertItemStyles} onSelect={onSelect}>
+        <span css={expertMenuAvatar(initial, avatarBg)} aria-hidden>
+          {initial}
+        </span>
+        <span>{item.label}</span>
+      </DropdownMenu.Item>
+    );
+  }
+
   return (
     <>
       <DropdownMenu.Item
         ref={itemRef}
-        css={itemStyles}
+        css={snippetItemStyles}
         onSelect={onSelect}
         onMouseEnter={handlePointerEnter}
         onMouseLeave={handlePointerLeave}
@@ -93,9 +177,11 @@ function DropdownSnippetMenuItem({
   );
 }
 
-function menuListViewport(maxVisibleItems: number) {
+function menuListViewport(maxVisibleItems: number, itemLayout: 'snippet' | 'text' | 'expert') {
+  const rowHeightPx =
+    itemLayout === 'expert' ? EXPERT_DROPDOWN_ITEM_ROW_HEIGHT_PX : SNIPPET_DROPDOWN_ITEM_ROW_HEIGHT_PX;
   return css({
-    maxHeight: maxVisibleItems * SNIPPET_DROPDOWN_ITEM_ROW_HEIGHT_PX,
+    maxHeight: maxVisibleItems * rowHeightPx,
     overflowY: 'auto',
     overflowX: 'hidden',
   });
@@ -105,6 +191,8 @@ export type KnowledgeSnippetDropdownMenuProps = {
   items: SnippetDropdownItem[];
   /** Fixed viewport height in rows; additional items scroll. */
   maxVisibleItems?: number;
+  /** Snippet / topics / experts row layouts (`9667:49361`, `10677:9748`, `10677:9804`). */
+  itemLayout?: 'snippet' | 'text' | 'expert';
   onItemSelect?: (item: SnippetDropdownItem) => void;
   onViewFullSnippet?: () => void;
   children: ReactElement;
@@ -118,13 +206,14 @@ export type KnowledgeSnippetDropdownMenuProps = {
 export function KnowledgeSnippetDropdownMenu({
   items,
   maxVisibleItems,
+  itemLayout = 'snippet',
   onItemSelect,
   onViewFullSnippet,
   children,
 }: KnowledgeSnippetDropdownMenuProps) {
   const { theme } = useDesignSystemTheme();
 
-  /** Figma Dropdown Menu `9667:49361` — `Background/backgroundPrimary`. */
+  /** Figma Dropdown Menu `9667:49361` / Topics `10677:9748` / Experts `10677:9804`. */
   const contentStyles = css({
     padding: 4,
     borderRadius: 12,
@@ -144,11 +233,12 @@ export function KnowledgeSnippetDropdownMenu({
         minWidth={0}
       >
         {maxVisibleItems ? (
-          <div css={menuListViewport(maxVisibleItems)}>
+          <div css={menuListViewport(maxVisibleItems, itemLayout)}>
             {items.map((item) => (
               <DropdownSnippetMenuItem
                 key={item.id}
                 item={item}
+                itemLayout={itemLayout}
                 onSelect={() => onItemSelect?.(item)}
                 onViewFullSnippet={onViewFullSnippet}
               />
@@ -159,6 +249,7 @@ export function KnowledgeSnippetDropdownMenu({
             <DropdownSnippetMenuItem
               key={item.id}
               item={item}
+              itemLayout={itemLayout}
               onSelect={() => onItemSelect?.(item)}
               onViewFullSnippet={onViewFullSnippet}
             />

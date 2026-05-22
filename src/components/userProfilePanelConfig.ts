@@ -29,7 +29,6 @@ export type UserProfilePanelConfig = {
   topics: readonly UserProfileTopic[];
   assets: readonly DomainAssetRow[];
   snippets: readonly DomainSnippetRow[];
-  paginationPageCount: number;
 };
 
 /** Figma user profile panel `10528:8558` — Ryan Chen. */
@@ -141,7 +140,6 @@ export const RYAN_CHEN_USER_PROFILE: UserProfilePanelConfig = {
       topicCount: 12,
     },
   ],
-  paginationPageCount: 8,
 };
 
 const EXPERT_AVATAR_BG: Record<string, string> = {
@@ -182,7 +180,6 @@ export function buildUserProfileFromExpert(expert: DomainExpert): UserProfilePan
     topics: RYAN_CHEN_USER_PROFILE.topics,
     assets: RYAN_CHEN_USER_PROFILE.assets,
     snippets: RYAN_CHEN_USER_PROFILE.snippets,
-    paginationPageCount: RYAN_CHEN_USER_PROFILE.paginationPageCount,
   };
 }
 

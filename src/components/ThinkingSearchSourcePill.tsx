@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { GlobeIcon, UserBadgeIcon, useDesignSystemTheme } from '@databricks/design-system';
 import type { ThemeType } from '@databricks/design-system';
-import { useCallback, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useRef, useState, type CSSProperties, type MouseEventHandler } from 'react';
 import { AiGradientIcon, AiGradientLightbulbIcon } from './AiGradientIcon';
 import { KnowledgeSnippetDropdownMenu } from './KnowledgeSnippetDropdownMenu';
 import {
@@ -10,6 +10,8 @@ import {
 } from './knowledgeSnippetPopoverLayer';
 import { SnippetPillChrome, type SnippetPillVisualState } from './knowledgeSnippetPillCore';
 import type { SnippetDropdownItem } from './snippetDropdownConfig';
+import type { SnippetPanelDomainId } from './domainPanelConfig';
+import { domainIdFromLabel } from './domainPanelConfig';
 import type { SnippetPopoverConfig } from './snippetPopoverConfig';
 
 const ICON_PX = 14;
@@ -24,6 +26,9 @@ export type ThinkingSearchSourcePillProps = {
   sourceMenuMaxVisibleItems?: number;
   sourcePopover?: SnippetPopoverConfig;
   onViewFullSnippet?: (snippetId?: string) => void;
+  /** When set, click opens this handler instead of a snippet dropdown menu. */
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  onTopicSelect?: (domainId: SnippetPanelDomainId) => void;
 };
 
 function sourceIcon(theme: ThemeType, kind: ThinkingSearchSourceKind): CSSProperties {
@@ -48,6 +53,8 @@ export function ThinkingSearchSourcePill({
   sourceMenuMaxVisibleItems,
   sourcePopover,
   onViewFullSnippet,
+  onClick,
+  onTopicSelect,
 }: ThinkingSearchSourcePillProps) {
   const { theme } = useDesignSystemTheme();
   const anchorRef = useRef<HTMLButtonElement>(null);
@@ -68,8 +75,16 @@ export function ThinkingSearchSourcePill({
     config: sourcePopover,
     hoverDelayMs: PILL_POPOVER_HOVER_DELAY_MS,
     placement: 'below-left',
-    isEnabled: !sourceMenu,
+    isEnabled: !sourceMenu && !onClick,
   });
+
+  const handleClick = useCallback<MouseEventHandler<HTMLButtonElement>>(
+    (event) => {
+      event.stopPropagation();
+      onClick?.(event);
+    },
+    [onClick],
+  );
 
   const handlePointerEnter = useCallback(() => {
     setHovered(true);
@@ -87,6 +102,15 @@ export function ThinkingSearchSourcePill({
     onViewFullSnippet?.();
   }, [dismissPopover, onViewFullSnippet]);
 
+  const handleMenuItemSelect = useCallback(
+    (item: SnippetDropdownItem) => {
+      if (kind !== 'topics' || !onTopicSelect) return;
+      const domainId = item.domainId ?? domainIdFromLabel(item.label);
+      if (domainId) onTopicSelect(domainId);
+    },
+    [kind, onTopicSelect],
+  );
+
   const pillChrome = (
     <SnippetPillChrome
       ref={anchorRef}
@@ -95,9 +119,10 @@ export function ThinkingSearchSourcePill({
       icon={<SourceIcon kind={kind} theme={theme} />}
       visual={visual}
       aria-label={label}
-      aria-haspopup={sourceMenu ? 'menu' : sourcePopover ? 'dialog' : undefined}
+      aria-haspopup={sourceMenu && !onClick ? 'menu' : sourcePopover ? 'dialog' : undefined}
       aria-expanded={sourcePopover ? popoverMounted && popoverVisible : undefined}
       data-name="Source"
+      onClick={onClick ? handleClick : undefined}
       onMouseEnter={handlePointerEnter}
       onMouseLeave={handlePointerLeave}
       onMouseDown={() => setPressed(true)}
@@ -107,10 +132,12 @@ export function ThinkingSearchSourcePill({
 
   return (
     <>
-      {sourceMenu ? (
+      {sourceMenu && !onClick ? (
         <KnowledgeSnippetDropdownMenu
           items={sourceMenu}
           maxVisibleItems={sourceMenuMaxVisibleItems}
+          itemLayout={kind === 'topics' ? 'text' : kind === 'experts' ? 'expert' : 'snippet'}
+          onItemSelect={kind === 'topics' ? handleMenuItemSelect : undefined}
           onViewFullSnippet={onViewFullSnippet}
         >
           {pillChrome}

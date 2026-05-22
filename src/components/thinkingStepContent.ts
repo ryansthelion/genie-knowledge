@@ -1,6 +1,7 @@
 import type { ThinkingPastStep } from './Thinking';
 import {
-  CUSTOMER_CHURN_SNIPPET_DROPDOWN_ITEMS,
+  CUSTOMER_CHURN_EXPERTS_DROPDOWN_ITEMS,
+  CUSTOMER_CHURN_TOPICS_DROPDOWN_ITEMS,
   CUSTOMER_CHURN_TOOL_CALL_CONTENT_ITEMS,
 } from './customerChurnSnippetConfig';
 
@@ -17,15 +18,21 @@ export const KNOWLEDGE_SNIPPETS_V2_THINKING_TRACE: ThinkingPastStep[] = [
         variant: 'search',
         title: 'Found relevant knowledge within Genie Graph.',
         sources: [
+          { id: 'snippets', label: '20 snippets', kind: 'snippets' },
           {
-            id: 'snippets',
-            label: '20 snippets',
-            kind: 'snippets',
-            sourceMenu: CUSTOMER_CHURN_SNIPPET_DROPDOWN_ITEMS,
+            id: 'topics',
+            label: '12 topics',
+            kind: 'topics',
+            sourceMenu: CUSTOMER_CHURN_TOPICS_DROPDOWN_ITEMS,
             sourceMenuMaxVisibleItems: 5,
           },
-          { id: 'topics', label: '12 topics', kind: 'topics' },
-          { id: 'experts', label: '8 experts', kind: 'experts' },
+          {
+            id: 'experts',
+            label: '8 experts',
+            kind: 'experts',
+            sourceMenu: CUSTOMER_CHURN_EXPERTS_DROPDOWN_ITEMS,
+            sourceMenuMaxVisibleItems: 5,
+          },
         ],
         contentItems: CUSTOMER_CHURN_TOOL_CALL_CONTENT_ITEMS,
       },

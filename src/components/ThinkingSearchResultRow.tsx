@@ -23,6 +23,7 @@ import {
   toolCallExpandedSearchHeader,
   toolCallHeaderTitle,
 } from './thinkingToolCallDrawer';
+import type { SnippetPanelDomainId } from './domainPanelConfig';
 import type { SnippetDropdownItem } from './snippetDropdownConfig';
 import type { SnippetPopoverConfig } from './snippetPopoverConfig';
 import { genieVar } from '../theme/genieSun';
@@ -47,6 +48,7 @@ export type ThinkingSearchResultRowProps = {
   sourceMenuMaxVisibleItems?: number;
   sourcePopover?: SnippetPopoverConfig;
   onViewFullSnippet?: (snippetId?: string) => void;
+  onDomainSelect?: (domainId: SnippetPanelDomainId) => void;
   /** Figma `10692:13402` — rows shown when the header is expanded. */
   contentItems?: ThinkingToolCallSnippetItem[];
   defaultExpanded?: boolean;
@@ -66,12 +68,16 @@ function HeaderSources({
   showExpertsSource,
   animateSourceFades,
   onViewFullSnippet,
+  onExpandToolCall,
+  onDomainSelect,
 }: {
   sources: ThinkingSearchSource[];
   showTopicsSource: boolean;
   showExpertsSource: boolean;
   animateSourceFades: boolean;
   onViewFullSnippet?: (snippetId?: string) => void;
+  onExpandToolCall?: () => void;
+  onDomainSelect?: (domainId: SnippetPanelDomainId) => void;
 }) {
   return (
     <div
@@ -100,6 +106,12 @@ function HeaderSources({
               sourceMenuMaxVisibleItems={source.sourceMenuMaxVisibleItems}
               sourcePopover={source.sourcePopover}
               onViewFullSnippet={onViewFullSnippet}
+              onTopicSelect={onDomainSelect}
+              onClick={
+                source.kind === 'snippets' && onExpandToolCall
+                  ? () => onExpandToolCall()
+                  : undefined
+              }
             />
           </span>
         );
@@ -120,6 +132,7 @@ export function ThinkingSearchResultRow({
   sourceMenuMaxVisibleItems,
   sourcePopover,
   onViewFullSnippet,
+  onDomainSelect,
   contentItems = [],
   defaultExpanded = false,
   showTopicsSource = true,
@@ -155,6 +168,11 @@ export function ThinkingSearchResultRow({
     setExpanded((value) => !value);
   }, [hasContent]);
 
+  const expandToolCall = useCallback(() => {
+    if (!hasContent) return;
+    setExpanded(true);
+  }, [hasContent]);
+
   const headerBody = (
     <>
       {expanded ? (
@@ -172,6 +190,8 @@ export function ThinkingSearchResultRow({
           showExpertsSource={showExpertsSource}
           animateSourceFades={animateSourceFades}
           onViewFullSnippet={onViewFullSnippet}
+          onExpandToolCall={expandToolCall}
+          onDomainSelect={onDomainSelect}
         />
       ) : null}
     </>

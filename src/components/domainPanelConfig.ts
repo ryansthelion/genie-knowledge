@@ -50,8 +50,6 @@ export type DomainPanelConfig = {
   experts: readonly DomainExpert[];
   assets: readonly DomainAssetRow[];
   snippets: readonly DomainSnippetRow[];
-  /** Figma pagination — total page buttons shown. */
-  paginationPageCount: number;
 };
 
 const MERCHANDISING_EXPERTS: DomainExpert[] = [
@@ -315,7 +313,6 @@ export const MERCHANDISING_DOMAIN_PANEL: DomainPanelConfig = {
   experts: MERCHANDISING_EXPERTS,
   assets: MERCHANDISING_ASSETS,
   snippets: MERCHANDISING_SNIPPETS,
-  paginationPageCount: 8,
 };
 
 /** Figma Domain Panel `10342:11108` — Sales Data topic. */
@@ -332,7 +329,6 @@ export const SALES_DATA_DOMAIN_PANEL: DomainPanelConfig = {
   experts: SALES_DATA_EXPERTS,
   assets: SALES_DATA_ASSETS,
   snippets: SALES_DATA_SNIPPETS,
-  paginationPageCount: 3,
 };
 
 export const DOMAIN_PANEL_BY_ID: Record<SnippetPanelDomainId, DomainPanelConfig> = {

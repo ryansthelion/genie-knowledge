@@ -6,6 +6,7 @@ import {
 } from './ThinkingSearchResultRow';
 import type { ThinkingToolCallSnippetItem } from './ThinkingToolCallSnippetContent';
 import { ThinkingToolCallRow, type ThinkingToolCallVariant } from './ThinkingToolCallRow';
+import type { SnippetPanelDomainId } from './domainPanelConfig';
 import type { SnippetDropdownItem } from './snippetDropdownConfig';
 import type { SnippetPopoverConfig } from './snippetPopoverConfig';
 import type { ThemeType } from '@databricks/design-system';
@@ -82,6 +83,7 @@ export type ThinkingProps = {
   showExpertsSource?: boolean;
   animateSourceFades?: boolean;
   onViewFullSnippet?: (snippetId?: string) => void;
+  onDomainSelect?: (domainId: SnippetPanelDomainId) => void;
 };
 
 function thinkingRoot() {
@@ -321,6 +323,7 @@ function ThinkingPastStepItem({
   showExpertsSource = true,
   animateSourceFades = false,
   onViewFullSnippet,
+  onDomainSelect,
 }: {
   theme: ThemeType;
   step: ThinkingPastStep;
@@ -341,6 +344,7 @@ function ThinkingPastStepItem({
   showExpertsSource?: boolean;
   animateSourceFades?: boolean;
   onViewFullSnippet?: (snippetId?: string) => void;
+  onDomainSelect?: (domainId: SnippetPanelDomainId) => void;
 }) {
   const descriptionEntrance = animateEntrances
     ? enterFromBelowMultisteps(MULTISTEPS_ENTRANCE_STAGGER_MS.description)
@@ -400,6 +404,7 @@ function ThinkingPastStepItem({
                     sourceMenuMaxVisibleItems={toolCall.sourceMenuMaxVisibleItems}
                     sourcePopover={toolCall.sourcePopover}
                     onViewFullSnippet={onViewFullSnippet}
+                    onDomainSelect={onDomainSelect}
                     contentItems={toolCall.contentItems}
                     showTopicsSource={showTopicsSource}
                     showExpertsSource={showExpertsSource}
@@ -443,6 +448,7 @@ function ThinkingStepContainer({
   showExpertsSource = true,
   animateSourceFades = false,
   onViewFullSnippet,
+  onDomainSelect,
 }: {
   theme: ThemeType;
   pastSteps: ThinkingPastStep[];
@@ -459,6 +465,7 @@ function ThinkingStepContainer({
   showExpertsSource?: boolean;
   animateSourceFades?: boolean;
   onViewFullSnippet?: (snippetId?: string) => void;
+  onDomainSelect?: (domainId: SnippetPanelDomainId) => void;
 }) {
   const visibleSteps =
     traceReveal === 'full' ? pastSteps : pastSteps.length > 0 ? [pastSteps[0]] : [];
@@ -495,6 +502,7 @@ function ThinkingStepContainer({
             showExpertsSource={showExpertsSource}
             animateSourceFades={animateSourceFades}
             onViewFullSnippet={onViewFullSnippet}
+            onDomainSelect={onDomainSelect}
           />
         ))}
       </div>
@@ -526,6 +534,7 @@ export function Thinking({
   showExpertsSource = true,
   animateSourceFades = false,
   onViewFullSnippet,
+  onDomainSelect,
 }: ThinkingProps) {
   const { theme } = useDesignSystemTheme();
   const traceId = useId();
@@ -594,6 +603,7 @@ export function Thinking({
             showExpertsSource={showExpertsSource}
             animateSourceFades={animateSourceFades}
             onViewFullSnippet={onViewFullSnippet}
+            onDomainSelect={onDomainSelect}
           />
         </div>
       ) : null}

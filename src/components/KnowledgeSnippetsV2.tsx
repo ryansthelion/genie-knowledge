@@ -31,17 +31,19 @@ import {
   userBubble,
 } from './knowledgeSnippetsShared';
 import { Thinking } from './Thinking';
+import type { SnippetPanelDomainId } from './domainPanelConfig';
 import { KNOWLEDGE_SNIPPETS_V2_THINKING_TRACE } from './thinkingStepContent';
 
 export type KnowledgeSnippetsV2Props = {
   onViewFullSnippet?: (snippetId?: string) => void;
+  onDomainSelect?: (domainId: SnippetPanelDomainId) => void;
 };
 
 /**
  * Version 2 — knowledge snippet pills in response (Figma `9665:45187`).
  * @see https://www.figma.com/design/st5IOjhahvmvXyDbjvMpHB/Genie--Unified-Components-?node-id=9665-45187
  */
-export function KnowledgeSnippetsV2({ onViewFullSnippet }: KnowledgeSnippetsV2Props) {
+export function KnowledgeSnippetsV2({ onViewFullSnippet, onDomainSelect }: KnowledgeSnippetsV2Props) {
   const { theme, getPrefixedClassName } = useDesignSystemTheme();
   const canvasHeaderBtnClass = getPrefixedClassName('btn');
   const {
@@ -153,6 +155,7 @@ export function KnowledgeSnippetsV2({ onViewFullSnippet }: KnowledgeSnippetsV2Pr
               showExpertsSource={showExpertsSource}
               animateSourceFades={animateSourceFades}
               onViewFullSnippet={onViewFullSnippet}
+              onDomainSelect={onDomainSelect}
             />
           ) : null}
 

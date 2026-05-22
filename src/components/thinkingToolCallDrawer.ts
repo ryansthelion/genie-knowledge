@@ -27,7 +27,7 @@ export function toolCallCardOuter() {
 function headerBackground(theme: ThemeType, interaction: ToolCallInteractionState) {
   if (interaction === 'press') return theme.colors.actionDefaultBackgroundPress;
   if (interaction === 'hover') return genieVar.actionDefaultBgHover;
-  return genieVar.actionDefaultBgDefault;
+  return genieVar.backgroundPrimary;
 }
 
 /** Collapsed tool-call header — full border radius. */

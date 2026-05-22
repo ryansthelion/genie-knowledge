@@ -21,6 +21,10 @@ const TOPICS_PER_PAGE = 3;
 const ASSETS_PER_PAGE = 4;
 const SNIPPETS_PER_PAGE = 4;
 
+function pageCountFor(total: number, perPage: number) {
+  return Math.max(1, Math.ceil(total / perPage));
+}
+
 /** Figma user profile panel `10528:8558`. */
 export type UserProfilePanelProps = {
   config: UserProfilePanelConfig;
@@ -54,7 +58,13 @@ export function UserProfilePanel({ config, onClose, onBack, onTopicSelect }: Use
     return config.snippets.slice(start, start + SNIPPETS_PER_PAGE);
   }, [config.snippets, currentPage]);
 
-  const showPagination = true;
+  const paginationPageCount = useMemo(() => {
+    if (activeTabId === 'topics') return pageCountFor(config.topics.length, TOPICS_PER_PAGE);
+    if (activeTabId === 'assets') return pageCountFor(config.assets.length, ASSETS_PER_PAGE);
+    return pageCountFor(config.snippets.length, SNIPPETS_PER_PAGE);
+  }, [activeTabId, config.topics.length, config.assets.length, config.snippets.length]);
+
+  const showPagination = paginationPageCount > 1;
 
   return (
     <aside css={panelRoot()} data-name="UserProfilePanel" aria-label={config.panelAriaLabel}>
@@ -133,7 +143,7 @@ export function UserProfilePanel({ config, onClose, onBack, onTopicSelect }: Use
 
           {showPagination ? (
             <DomainPanelPagination
-              pageCount={config.paginationPageCount}
+              pageCount={paginationPageCount}
               currentPage={currentPage}
               onPageChange={setCurrentPage}
             />

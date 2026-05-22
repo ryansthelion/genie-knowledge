@@ -149,7 +149,6 @@ export function promptDock(theme: ThemeType) {
     paddingTop: theme.spacing.sm,
     paddingBottom: `calc(${theme.spacing.md}px + env(safe-area-inset-bottom, 0px))`,
     backgroundColor: genieVar.bgSecondary,
-    borderTop: `1px solid ${genieVar.border}`,
     zIndex: 2,
   });
 }
